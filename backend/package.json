@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.1"
+  },
+  "name": "chatify-backend",
+  "version": "1.0.0",
+  "description": "Real time chat application",
+  "main": "server.js",
+  "type": "module",
+  "devDependencies": {},
+  "scripts": {
+    "test": "test",
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "author": "Iqbal Shahed",
+  "license": "ISC"
+}
