@@ -1,9 +1,10 @@
 {
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "chatify-app": "file:..",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.1"
   },
@@ -12,7 +13,6 @@
   "description": "Real time chat application",
   "main": "server.js",
   "type": "module",
-  "devDependencies": {},
   "scripts": {
     "test": "test",
     "dev": "node --watch src/server.js",
