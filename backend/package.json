@@ -6,7 +6,8 @@
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.1"
+    "mongoose": "^8.19.1",
+    "resend": "^6.3.0"
   },
   "name": "chatify-backend",
   "version": "1.0.0",
