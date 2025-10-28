@@ -1,14 +1,13 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from '../src/routes/auth.route.js';
 import messageRoutes from '../src/routes/message.route.js';
 import { connectDB } from './lib/db.js';
+import { ENV } from './lib/env.js';
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = ENV.PORT;
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
@@ -17,7 +16,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/", messageRoutes);
 
 // make ready for development
-if (process.env.NODE_ENV === "production") {
+if (ENV.NODE_ENV === "production") {
     const frontendPath = path.join(_dirname, "../../frontend/dist");
     app.use(express.static(frontendPath));
 
