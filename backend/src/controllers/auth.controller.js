@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env.js";
 import { resourceUsage } from "process";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -107,4 +108,24 @@ export const logout = (_, res) => {
     secure: process.env.NODE_ENV !== "development",
   });
   res.status(200).json({ message: "Logout successfully" });
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
+    if (!profilePic) return res.status(400).json({ message: "Profile Picture is requried." })
+    const userId = req.user._id;
+    const uploadedResponse = await cloudinary.uploader.upload(profilePic, {
+      folder: "chatify/profilePic",
+      resource_type: "image",
+      transformation: [
+        { width: 400, height: 400, crop: "fill", gravity: "face" }
+      ]
+    });
+    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: uploadedResponse.secure_url }, { new: true });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error in upload profile picture: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
