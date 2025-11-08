@@ -15,7 +15,7 @@ const _dirname = path.dirname(_filename);
 app.use(express.json()); //req.body
 app.use(cookieParser()); //req.cookie
 app.use("/api/auth", authRoutes);
-app.use("/api/", messageRoutes);
+app.use("/api/message", messageRoutes);
 
 // make ready for development
 if (ENV.NODE_ENV === "production") {
