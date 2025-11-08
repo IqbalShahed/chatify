@@ -19,9 +19,3 @@ export const protectRoute = async (req, res, next) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-
-export const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, //15min
-    max: 5,
-    message: { message: "Too many login attempts. Please try again later." }
-})
