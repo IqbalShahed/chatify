@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import { resend, sender } from "../lib/resend.js";
 import { createWelcomeEmailTemplate } from "./emailTemplates.js";
 

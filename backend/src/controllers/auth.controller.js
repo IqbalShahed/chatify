@@ -3,7 +3,6 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env.js";
-import { resourceUsage } from "process";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
@@ -112,20 +111,27 @@ export const logout = (_, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { profilePic } = req.body;
-    if (!profilePic) return res.status(400).json({ message: "Profile Picture is requried." })
-    const userId = req.user._id;
-    const uploadedResponse = await cloudinary.uploader.upload(profilePic, {
-      folder: "chatify/profilePic",
-      resource_type: "image",
-      transformation: [
-        { width: 400, height: 400, crop: "fill", gravity: "face" }
-      ]
+    const userId = req.user?._id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Profile picture file is required" });
+    }
+
+    const uploadedResponse = await cloudinary.uploader.upload(req.file.path, {
+      folder: `chatify/profilePic/${userId}`,
+      transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
     });
-    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: uploadedResponse.secure_url }, { new: true });
-    res.status(200).json(updatedUser);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadedResponse.secure_url },
+      { new: true }
+    );
+
+    return res.status(200).json(updatedUser);
   } catch (error) {
-    console.error("Error in upload profile picture: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in upload profile picture:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
