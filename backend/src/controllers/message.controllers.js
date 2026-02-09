@@ -39,7 +39,7 @@ export const getMessageByUserId = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     try {
-        const { text, image } = req.body;
+        const { text } = req.body;
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
@@ -49,10 +49,14 @@ export const sendMessage = async (req, res) => {
         }
 
         let imageUrl;
-        if (image) {
-            const uploadResponse = await cloudinary.uploader.upload(image, {
-                folder: `chatify/messages/${req.user._id}`,
-            });
+
+        if (req.file) {
+            const uploadResponse = await cloudinary.uploader.upload(
+                `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+                {
+                    folder: `chatify/messages/${senderId}`,
+                }
+            );
             imageUrl = uploadResponse.secure_url;
         }
 
@@ -60,18 +64,17 @@ export const sendMessage = async (req, res) => {
             senderId,
             receiverId,
             text,
-            image: imageUrl
+            image: imageUrl,
         });
 
         await newMessage.save();
-        //todo: Send message to receiver if onlne -- socket.io
-
         res.status(201).json(newMessage);
     } catch (error) {
-        console.error("Error in sendMessage: ", error);
+        console.error("Error in sendMessage:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
+
 
 export const getChatPartners = async (req, res) => {
     try {
