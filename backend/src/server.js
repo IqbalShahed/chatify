@@ -7,8 +7,9 @@ import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { app, server } from './lib/socket.js';
 
-const app = express();
+// const app = express();
 const port = ENV.PORT;
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -30,7 +31,7 @@ if (ENV.NODE_ENV === "production") {
     })
 }
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log("App is running on port ", port)
     connectDB();
 });
