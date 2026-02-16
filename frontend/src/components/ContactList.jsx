@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import { useChatStore } from '../store/useChatStore';
 import UserLoadingSkeleton from '../components/UsersLoadingSkeleton';
 import NoChatsFound from '../components/NoChatsFound';
+import { useAuthStore } from '../store/useAuthStore';
 
 const ContactList = () => {
     const { getAllContacts, allContacts, isUsersLoading, setSelectedUser } = useChatStore();
+    const { onlineUsers } = useAuthStore();
     useEffect(() => {
         getAllContacts();
     }, [getAllContacts])
@@ -22,7 +24,7 @@ const ContactList = () => {
                 >
                     {/** TODO: MAKE IT WORKING WITH SOCKET */}
                     <div className='flex items-center gap-3'>
-                        <div className='avatar avatar-online'>
+                        <div className={`avatar ${onlineUsers.includes(contact._id) ? 'avatar-online' : 'avatar-offline'}`}>
                             <div className='size-12 rounded-full'>
                                 <img src={contact.profilePic || "/images/avatar.png"} alt={contact.fullName} />
                             </div>
