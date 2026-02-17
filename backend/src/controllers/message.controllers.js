@@ -40,9 +40,13 @@ export const getMessageByUserId = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     try {
-        const { text } = req.body;
+        const text = typeof req.body?.text === "string" ? req.body.text.trim() : "";
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
+
+        if (!text && !req.file) {
+            return res.status(400).json({ message: "Message text or image is required" });
+        }
 
         const userExists = await User.findById(receiverId);
         if (!userExists) {

@@ -15,6 +15,9 @@ export const protectRoute = async (req, res, next) => {
         next()
     } catch (error) {
         console.error("Error in protectRoute middleware: ", error);
+        if (error?.name === "TokenExpiredError" || error?.name === "JsonWebTokenError") {
+            return res.status(401).json({ message: "Unauthorized - invalid token." });
+        }
         res.status(500).json({ message: "Internal server error" });
     }
 }

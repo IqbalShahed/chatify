@@ -18,13 +18,13 @@ const ChatContainer = () => {
     }, [messages]);
 
     useEffect(() => {
-        if (!selectedUser) return;
+        if (!selectedUser?._id) return;
 
         getMessagesByUserId(selectedUser._id);
         subscribeToMessages();
 
         return () => unsubscribeFromMessages();
-    }, [selectedUser]);
+    }, [selectedUser?._id, getMessagesByUserId, subscribeToMessages, unsubscribeFromMessages]);
 
 
     return (

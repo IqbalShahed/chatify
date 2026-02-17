@@ -42,6 +42,64 @@ io.on("connection", (socket) => {
 
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
+
+    // ----------------Call Signal------------------
+
+    //Call User (Send Offer)
+    socket.on("callUser", ({ to, offer }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("incomingCall", {
+                from: socket.userId,
+                fromUser: {
+                    _id: socket.userId,
+                    fullName: socket.user.fullName,
+                    profilePic: socket.user.profilePic,
+                },
+                offer,
+            });
+        }
+    });
+
+    //Answer Call
+    socket.on("answerCall", ({ to, answer }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("callAccepted", {
+                answer,
+            });
+        }
+    });
+
+    //ICE Candidate Exchange
+    socket.on("iceCandidate", ({ to, candidate }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("iceCandidate", {
+                candidate,
+            });
+        }
+    });
+
+    //End Call
+    socket.on("endCall", ({ to }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("callEnded");
+        }
+    });
+
+    // Reject Call
+    socket.on("rejectCall", ({ to }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("callRejected");
+        }
+    });
 });
 
 export { io, app, server };

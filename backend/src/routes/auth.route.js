@@ -2,12 +2,11 @@ import express from 'express';
 import { signup, login, logout, updateProfile } from '../controllers/auth.controller.js';
 import { protectRoute } from '../middlewares/auth.middleware.js';
 import { arcjetProtection } from '../middlewares/arcjet.middleware.js';
-import multer from 'multer';
+import { upload } from '../lib/multer.js';
 
 const router = express.Router();
 
 router.use(arcjetProtection);
-const upload = multer({ storage: multer.diskStorage({}) });
 
 router.post("/signup", signup);
 router.post("/login", login);

@@ -22,7 +22,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "test",
+    "test": "node --test",
     "dev": "node --watch src/server.js",
     "start": "node src/server.js"
   },

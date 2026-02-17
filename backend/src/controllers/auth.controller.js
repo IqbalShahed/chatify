@@ -118,10 +118,13 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile picture file is required" });
     }
 
-    const uploadedResponse = await cloudinary.uploader.upload(req.file.path, {
+    const uploadedResponse = await cloudinary.uploader.upload(
+      `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+      {
       folder: `chatify/profilePic/${userId}`,
       transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
-    });
+      }
+    );
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useChatStore } from '../store/useChatStore';
 import BorderAnimatedContainer from "../components/BorderAnimatedContainer";
 import NoConversationPlaceholder from '../components/NoConversationPlaceholder';
@@ -7,9 +7,24 @@ import ChatsList from '../components/ChatsList';
 import ContactList from '../components/ContactList';
 import ActiveTabSwitch from '../components/ActiveTabSwitch';
 import ProfileHeader from '../components/ProfileHeader';
+import { useAuthStore } from '../store/useAuthStore';
+import { useCallStore } from '../store/useCallStore';
+import AudioCallPanel from '../components/AudioCallPanel';
 
 const ChatPage = () => {
     const { activeTab, selectedUser } = useChatStore();
+    const { socket } = useAuthStore();
+    const { subscribeToCallEvents, unsubscribeFromCallEvents } = useCallStore();
+
+    useEffect(() => {
+        if (!socket) return;
+        subscribeToCallEvents();
+
+        return () => {
+            unsubscribeFromCallEvents();
+        };
+    }, [socket, subscribeToCallEvents, unsubscribeFromCallEvents]);
+
     return (
         <div className='relative w-full max-w-6xl h-[800px]'>
             <BorderAnimatedContainer>
@@ -27,6 +42,7 @@ const ChatPage = () => {
                     {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
                 </div>
             </BorderAnimatedContainer>
+            <AudioCallPanel />
         </div>
     );
 };
